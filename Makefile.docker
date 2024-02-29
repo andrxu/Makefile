@@ -1,0 +1,39 @@
+
+# Usage: make create-docker-network
+create-docker-network:
+	@echo "Creating docker network: ${network}"
+	@$(call create-docker-network)
+
+# Usage: make remove-docker-network
+remove-docker-network:
+	@echo "Removing docker network: ${network}"
+	@$(call docker-network-remove,${network})
+
+define create-docker-network
+	count=1; \
+	while [[ $$count -le 3 ]] ; do \
+		echo "Docker network creation attempt: " $$count; \
+		result=$$(docker network create ${network} > /dev/null; echo $$?); \
+		((count = count + 1)); \
+		networkid=$$(docker network ls -q -f name="^${network}$$"); \
+		if [[ "$$networkid" != "" ]]; then \
+			echo "Docker network created or exists NAME: ${network}, ID: $$networkid"; \
+			break; \
+		fi; \
+		sleep 3; \
+	done; \
+	if [[ 0 -lt $$result ]]; then \
+		echo "Docker network creation failed"; \
+		false; \
+	fi
+endef
+
+define docker-network-remove
+	$(eval result := $(shell docker network ls -q -f name="^$(1)$$"))
+    if [ -n "${result}" ]; then \
+		echo ${result} | xargs docker network remove > /dev/null; \
+	else \
+        echo "No network found with the specified name: ${1}" ; \
+    fi
+endef
+
