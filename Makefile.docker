@@ -30,10 +30,10 @@ endef
 
 define docker-network-remove
 	$(eval result := $(shell docker network ls -q -f name="^$(1)$$"))
-    if [ -n "${result}" ]; then \
+	if [ -n "${result}" ]; then \
 		echo ${result} | xargs docker network remove > /dev/null; \
 	else \
-        echo "No network found with the specified name: ${1}" ; \
-    fi
+		echo "No network found with the specified name: ${1}" ; \
+	fi
 endef
 
