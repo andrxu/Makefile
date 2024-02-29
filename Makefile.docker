@@ -1,17 +1,16 @@
-
-# Usage: make create-docker-network
 create-docker-network:
 	@echo "Creating docker network: ${network}"
 	@$(call create-docker-network)
+.PHONY: create-docker-network
 
-# Usage: make remove-docker-network
 remove-docker-network:
 	@echo "Removing docker network: ${network}"
 	@$(call docker-network-remove,${network})
+.PHONY: remove-docker-network
 
 define create-docker-network
 	count=1; \
-	while [[ $$count -le 3 ]] ; do \
+	while [[ $$count -le 3 ]]; do \
 		echo "Docker network creation attempt: " $$count; \
 		result=$$(docker network create ${network} > /dev/null; echo $$?); \
 		((count = count + 1)); \

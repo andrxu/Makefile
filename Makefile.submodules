@@ -1,6 +1,6 @@
 update-submodules: ## Updates git submodules
 	@echo "Updating git submodules..."
 	git submodule update --init --recursive --remote
-.PHONY: update-submodule
+.PHONY: update-submodules
 
 
